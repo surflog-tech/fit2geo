@@ -1,10 +1,12 @@
-/// <reference path="./modules.d.ts"/>
-import { default as FitParser } from 'fit-file-parser';
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
+/// <reference path="./fit-file-parser.d.ts"/>
+import { GeoJSON } from 'geojson';
+import FitParser from 'fit-file-parser';
 import transform from './transform';
 import { Fit, NullOrError } from './index.d';
 
-function parseFit(buffer: ArrayBuffer) {
-  return new Promise<Fit>((resolve, reject) => {
+function parseFit(buffer: ArrayBuffer): Promise<Fit> {
+  return new Promise((resolve, reject) => {
     const fitParser = new FitParser();
     fitParser.parse(buffer, (err: NullOrError, res: Fit) => {
       if (err) return reject(err);
@@ -13,7 +15,7 @@ function parseFit(buffer: ArrayBuffer) {
   });
 }
 
-async function handler(buffer: ArrayBuffer) {
+async function handler(buffer: ArrayBuffer): Promise<GeoJSON> {
   const { records } = await parseFit(buffer);
   return transform(records);
 }

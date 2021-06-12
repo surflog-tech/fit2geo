@@ -1,3 +1,4 @@
-/// <reference path="../src/modules.d.ts" />
-declare function handler(buffer: ArrayBuffer): Promise<import("geojson").GeoJSON>;
+/// <reference path="../src/fit-file-parser.d.ts" />
+import { GeoJSON } from 'geojson';
+declare function handler(buffer: ArrayBuffer): Promise<GeoJSON>;
 export default handler;
