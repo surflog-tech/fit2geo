@@ -1,6 +1,6 @@
 {
   "name": "fit2geo",
-  "version": "1.0.5",
+  "version": "1.0.5-0",
   "description": "FIT to GeoJSON",
   "keywords": [
     "fit",
@@ -16,8 +16,8 @@
     "compile": "tsc --declaration",
     "test": "mocha",
     "lint": "eslint --ext .ts src/*",
-    "predeploy": "yarn run compile && yarn version --patch",
-    "deploy": "yarn publish"
+    "predeploy": "yarn run compile",
+    "deploy": "yarn publish --prepatch "
   },
   "directories": {
     "lib": "./lib",
