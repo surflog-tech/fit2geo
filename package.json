@@ -9,7 +9,7 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "bin": {
-    "fit2geo": "./lib/fit2geo.js"
+    "fit2geo": "lib/fit2geo.js"
   },
   "license": "MIT",
   "scripts": {
@@ -19,11 +19,7 @@
     "predeploy": "yarn run compile",
     "deploy": "yarn publish --patch"
   },
-  "directories": {
-    "lib": "./lib",
-    "src": "./src",
-    "test": "./src"
-  },
+  "files": ["lib"],
   "engines": {
     "node": "14"
   },
