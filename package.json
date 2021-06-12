@@ -1,6 +1,6 @@
 {
   "name": "fit2geo",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "FIT to GeoJSON",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
