@@ -1,5 +1,5 @@
 export interface Record {
-  timestamp: String;
+  timestamp: string;
   position_lat: number;
   position_long: number;
   distance: number;
