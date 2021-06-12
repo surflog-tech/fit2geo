@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { readFile } from 'fs/promises';
 import fit2geo from './index';
 
