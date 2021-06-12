@@ -1,4 +1,3 @@
-// import { GeoJSON } from 'geojson';
 import { readFileSync } from 'fs';
 import fit2geo from './index';
 
@@ -9,7 +8,8 @@ describe('fit2geo', () => {
   it('should be able to parse a FIT file', async () => {
     const fitData:ArrayBuffer = readFileSync(fitFile);
     return fit2geo(fitData);
-    // const result:GeoJSON = await fit2geo(fitData);
-    // console.log(result);
+    // const result = await fit2geo(fitData);
+    // const { features: [f] } = result;
+    // console.log(f);
   });
 });
