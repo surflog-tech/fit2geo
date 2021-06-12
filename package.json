@@ -9,7 +9,7 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "bin": {
-    "fit2geo": "lib/fit2geo.js"
+    "fit2geo": "lib/cli.js"
   },
   "license": "MIT",
   "scripts": {
