@@ -1,5 +1,5 @@
 export interface Record {
-  timestamp: string;
+  timestamp: Date;
   position_lat: number;
   position_long: number;
   distance: number;
@@ -14,5 +14,3 @@ export interface Record {
 export interface Fit {
   records: Array<Record>;
 }
-
-export type NullOrError = null | Error;

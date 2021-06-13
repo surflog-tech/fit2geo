@@ -9,7 +9,6 @@ describe('fit2geo', () => {
     const fitData:ArrayBuffer = readFileSync(fitFile);
     return fit2geo(fitData);
     // const result = await fit2geo(fitData);
-    // const { features: [f] } = result;
-    // console.log(f);
+    // console.log(JSON.stringify(result));
   });
 });

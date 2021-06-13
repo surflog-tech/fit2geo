@@ -13,7 +13,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "compile": "tsc --declaration",
+    "compile": "tsc",
     "test": "mocha",
     "lint": "eslint --ext .ts src/*",
     "predeploy": "yarn run compile",

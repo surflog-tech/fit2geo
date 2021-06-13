@@ -3,12 +3,12 @@
 import { FeatureCollection } from 'geojson';
 import FitParser from 'fit-file-parser';
 import transform from './transform';
-import { Fit, NullOrError } from './index.d';
+import { Fit } from './index.d';
 
 function parseFit(buffer: ArrayBuffer): Promise<Fit> {
   return new Promise((resolve, reject) => {
     const fitParser = new FitParser();
-    fitParser.parse(buffer, (err: NullOrError, res: Fit) => {
+    fitParser.parse(buffer, (err, res) => {
       if (err) return reject(err);
       resolve(res);
     });
