@@ -13,7 +13,7 @@ function transform(records: Record[] = []): FeatureCollection {
   const coordinates:Position[] = records.map(record);
   const coordTimes = records.map(recordTimestampToISOString);
   const [time] = coordTimes;
-  const featureCollection: FeatureCollection = {
+  return {
     type: 'FeatureCollection',
     features: [{
       type: 'Feature',
@@ -27,7 +27,6 @@ function transform(records: Record[] = []): FeatureCollection {
       },
     }],
   };
-  return featureCollection;
 }
 
 export default transform;
