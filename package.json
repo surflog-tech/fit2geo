@@ -13,7 +13,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "compile": "tsc",
+    "compile": "rm lib/*.js && tsc",
     "test": "mocha",
     "lint": "eslint src",
     "predeploy": "npm run compile && npm version patch",
