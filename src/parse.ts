@@ -6,6 +6,7 @@ import { Fit } from './index.d';
 const options = {
   mode: 'list',
   speedUnit: 'km/h',
+  lengthUnit: 'km',
   elapsedRecordField: true,
   // force: false,
 };

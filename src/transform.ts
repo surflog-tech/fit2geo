@@ -10,10 +10,11 @@ function recordFilter({ position_long, position_lat }: Record): boolean {
   return [position_long, position_lat].some((val) => val === undefined || Number.isNaN(val)) === false;
 }
 
-function recordMeta({ timestamp, speed }: Record): GeoJsonProperties {
+function recordMeta({ timestamp, speed, distance }: Record): GeoJsonProperties {
   return {
     time: dateToTimestamp(timestamp),
     speed,
+    distance,
   };
 }
 
