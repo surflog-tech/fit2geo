@@ -16,8 +16,8 @@
     "compile": "tsc",
     "test": "mocha",
     "lint": "eslint src",
-    "predeploy": "yarn run compile",
-    "deploy": "yarn publish --patch"
+    "predeploy": "npm run compile && npm version patch",
+    "deploy": "npm publish"
   },
   "files": [
     "lib"
