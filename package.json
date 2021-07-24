@@ -7,7 +7,6 @@
     "GeoJSON"
   ],
   "main": "lib/index.js",
-  "types": "lib/index.d.ts",
   "bin": {
     "fit2geo": "lib/cli.js"
   },
