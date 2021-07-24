@@ -1,37 +1,40 @@
-import { FeatureCollection, Position } from 'geojson';
+import { GeoJSON, GeoJsonProperties } from 'geojson';
+import { multiLineString as turfMultiLineString } from '@turf/helpers';
 import { Record } from './index.d';
 
-function recordTimestampToISOString({ timestamp }: Record) {
-  return timestamp.toISOString();
+function dateToTimestamp(d: Date) {
+  return d.getTime();
 }
 
 function recordFilter({ position_long, position_lat }: Record): boolean {
   return [position_long, position_lat].some((val) => val === undefined || Number.isNaN(val)) === false;
 }
 
-function record({ position_long, position_lat, altitude }: Record): Position {
-  return [position_long, position_lat, altitude];
+function recordMeta({ timestamp, speed }: Record): GeoJsonProperties {
+  return {
+    time: dateToTimestamp(timestamp),
+    speed,
+  };
 }
 
-function transform(records: Record[] = []): FeatureCollection {
+function reducer(accumulator: number[][][], currentValue: Record, index: number, array: Record[]) {
+  const { position_long, position_lat, altitude, elapsed_time, timer_time } = currentValue;
+  if (index > 0) {
+    const prevValue = array[index - 1];
+    const diffPrev = prevValue.elapsed_time - prevValue.timer_time;
+    const diff = elapsed_time - timer_time;
+    if (diffPrev !== diff) accumulator.push([]);
+  }
+  const lastLine = accumulator[accumulator.length - 1];
+  lastLine.push([position_long, position_lat, altitude]);
+  return accumulator;
+}
+
+function transform(records: Record[]): GeoJSON {
   const recordsFiltered = records.filter(recordFilter);
-  const coordinates = recordsFiltered.map(record);
-  const coordTimes = recordsFiltered.map(recordTimestampToISOString);
-  const [time] = coordTimes;
-  return {
-    type: 'FeatureCollection',
-    features: [{
-      type: 'Feature',
-      geometry: {
-        type: 'LineString',
-        coordinates,
-      },
-      properties: {
-        time,
-        coordTimes,
-      },
-    }],
-  };
+  const coordsMeta = recordsFiltered.map(recordMeta);
+  const props = { coordsMeta };
+  return turfMultiLineString(recordsFiltered.reduce(reducer, [[]]), props);
 }
 
 export default transform;

@@ -9,6 +9,8 @@ export interface Record {
   heart_rate: number;
   cadence: number;
   fractional_cadence: number;
+  elapsed_time: number;
+  timer_time: number;
 }
 
 export interface Fit {

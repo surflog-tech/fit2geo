@@ -1,6 +1,6 @@
 {
   "name": "fit2geo",
-  "version": "1.1.14",
+  "version": "1.2.0",
   "description": "FIT to GeoJSON",
   "keywords": [
     "FIT",
@@ -15,7 +15,7 @@
   "scripts": {
     "compile": "tsc",
     "test": "mocha",
-    "lint": "eslint --ext .ts src/*",
+    "lint": "eslint src",
     "predeploy": "yarn run compile",
     "deploy": "yarn publish --patch"
   },
@@ -26,13 +26,14 @@
     "node": "14"
   },
   "dependencies": {
+    "@turf/helpers": "6.5.0",
     "fit-file-parser": "1.9.0"
   },
   "devDependencies": {
     "@tsconfig/node14": "1.0.1",
     "@types/geojson": "7946.0.8",
-    "@types/mocha": "8.2.3",
-    "@types/node": "16.4.0",
+    "@types/mocha": "9.0.0",
+    "@types/node": "16.4.1",
     "@typescript-eslint/eslint-plugin": "4.28.4",
     "@typescript-eslint/parser": "4.28.4",
     "eslint": "7.31.0",
