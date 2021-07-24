@@ -1,3 +1,4 @@
+import assert from 'assert';
 import { readFileSync } from 'fs';
 import parseFit from '../src/parse';
 import fit2geo from '../src/index';
@@ -13,7 +14,16 @@ describe('fit2geo', () => {
     return parseFit(fitData);
   });
 
-  it('should log result', async function() {
+  it('should find multiple LineStrings', async function() {
+    this.timeout(10000);
+    const fitData:ArrayBuffer = readFileSync(fitFile);
+    const result = await fit2geo(fitData);
+    if (result.type !== 'Feature' || result.geometry.type !== 'MultiLineString') return assert.fail();
+    const { geometry: { coordinates } } = result;
+    assert.strictEqual(coordinates.length, 4);
+  });
+
+  xit('should log result', async function() {
     this.timeout(10000);
     const fitData:ArrayBuffer = readFileSync(fitFile);
     const result = await fit2geo(fitData);
