@@ -29,7 +29,6 @@ function reducer(accumulator: number[][][], currentValue: Record, index: number,
 
 function parameterFilter(records: Record[], multiLine: MultiLineString): Record[] {
   const coords = coordAll(multiLine);
-  console.log(coords.length);
   if (coords.length === 0) return [];
   let coordIndex = 0;
   return records.filter(({ position_long, position_lat }) => {
