@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { build } = require('esbuild');
+const { nodeExternalsPlugin } = require('esbuild-node-externals');
 
 const options = {
   outdir: 'lib',
   bundle: true,
-  external: ['@turf/helpers', 'fit-file-parser'],
   sourcemap: true,
   platform: 'node',
   format: 'cjs',
+  plugins: [nodeExternalsPlugin()],
 };
 
 void build({
