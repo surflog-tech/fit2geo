@@ -44,6 +44,7 @@ function transform(records: Record[]): GeoJSON {
   const multiline = turfMultiLineString(records.reduce(reducer, [[]]));
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-call
   const simplified = turfSimplify(multiline, simplifyOptions);
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const coordsMeta: GeoJsonProperties = parameterFilter(records, simplified).map((record) => ({
     ...record,
