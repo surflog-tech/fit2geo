@@ -1,21 +1,17 @@
-import { GeoJSON, GeoJsonProperties } from 'geojson';
+import { GeoJSON, MultiLineString, GeoJsonProperties } from 'geojson';
 import { multiLineString as turfMultiLineString } from '@turf/helpers';
+import turfSimplify from '@turf/simplify';
+import { coordAll } from '@turf/meta';
 import { Record } from './index.d';
+
+const simplifyOptions = {
+  tolerance: 0,
+  highQuality: true,
+  mutate: true,
+};
 
 function dateToTimestamp(d: Date) {
   return d.getTime();
-}
-
-function recordFilter({ position_long, position_lat }: Record): boolean {
-  return [position_long, position_lat].some((val) => val === undefined || Number.isNaN(val)) === false;
-}
-
-function recordMeta({ timestamp, speed, distance }: Record): GeoJsonProperties {
-  return {
-    time: dateToTimestamp(timestamp),
-    speed,
-    distance,
-  };
 }
 
 function reducer(accumulator: number[][][], currentValue: Record, index: number, array: Record[]) {
@@ -31,11 +27,32 @@ function reducer(accumulator: number[][][], currentValue: Record, index: number,
   return accumulator;
 }
 
+function parameterFilter(records: Record[], multiLine: MultiLineString): Record[] {
+  const coords = coordAll(multiLine);
+  let coordIndex = 0;
+  return records.filter(({ position_long, position_lat }) => {
+    const recordInvalid = [position_long, position_lat].some((val) => val === undefined || Number.isNaN(val)) === true;
+    if (recordInvalid === true) return false;
+    const match = [position_long, position_lat].every((coord, index) => coord === coords[coordIndex][index]);
+    if (match === false) return false;
+    coordIndex += 1;
+    return true;
+  });
+}
+
 function transform(records: Record[]): GeoJSON {
-  const recordsFiltered = records.filter(recordFilter);
-  const coordsMeta = recordsFiltered.map(recordMeta);
-  const props = { coordsMeta };
-  return turfMultiLineString(recordsFiltered.reduce(reducer, [[]]), props);
+  const multiline = turfMultiLineString(records.reduce(reducer, [[]]));
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-call
+  const simplified = turfSimplify(multiline, simplifyOptions);
+  // @ts-ignore
+  const coordsMeta: GeoJsonProperties = parameterFilter(records, simplified).map((record) => ({
+    ...record,
+    time: dateToTimestamp(record.timestamp),
+  }));
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  simplified.properties = { coordsMeta };
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  return simplified;
 }
 
 export default transform;
