@@ -32,6 +32,7 @@ function parameterFilter(records: Record[], multiLine: MultiLineString): Record[
   if (coords.length === 0) return [];
   let coordIndex = 0;
   return records.filter(({ position_long, position_lat }) => {
+    if (coords[coordIndex] === undefined) return false;
     const recordInvalid = [position_long, position_lat].some((val) => val === undefined || Number.isNaN(val)) === true;
     if (recordInvalid === true) return false;
     const match = [position_long, position_lat].every((coord, index) => coord === coords[coordIndex][index]);
