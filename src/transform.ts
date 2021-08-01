@@ -14,8 +14,13 @@ function dateToTimestamp(d: Date) {
   return d.getTime();
 }
 
+function recordInvalid(lng: number, lat: number) {
+  return [lng, lat].some((val) => typeof val !== 'number');
+}
+
 function reducer(accumulator: number[][][], currentValue: Record, index: number, array: Record[]) {
   const { position_long, position_lat, altitude, elapsed_time, timer_time } = currentValue;
+  if (recordInvalid(position_long, position_lat)) return accumulator;
   if (index > 0) {
     const prevValue = array[index - 1];
     const diffPrev = prevValue.elapsed_time - prevValue.timer_time;
@@ -23,18 +28,21 @@ function reducer(accumulator: number[][][], currentValue: Record, index: number,
     if (diffPrev !== diff) accumulator.push([]);
   }
   const lastLine = accumulator[accumulator.length - 1];
-  lastLine.push([position_long, position_lat, altitude]);
+  if (typeof altitude === 'number') {
+    lastLine.push([position_long, position_lat, altitude]);
+  } else {
+    lastLine.push([position_long, position_lat]);
+  }
   return accumulator;
 }
 
-function parameterFilter(records: Record[], multiLine: MultiLineString): Record[] {
-  const coords = coordAll(multiLine);
+function parameterFilter(records: Record[], multiline: MultiLineString): Record[] {
+  const coords = coordAll(multiline);
   if (coords.length === 0) return [];
   let coordIndex = 0;
   return records.filter(({ position_long, position_lat }) => {
     if (coords[coordIndex] === undefined) return false;
-    const recordInvalid = [position_long, position_lat].some((val) => val === undefined || Number.isNaN(val)) === true;
-    if (recordInvalid === true) return false;
+    if (recordInvalid(position_long, position_lat)) return false;
     const match = [position_long, position_lat].every((coord, index) => coord === coords[coordIndex][index]);
     if (match === false) return false;
     coordIndex += 1;
@@ -43,19 +51,16 @@ function parameterFilter(records: Record[], multiLine: MultiLineString): Record[
 }
 
 function transform(records: Record[]): GeoJSON {
-  const multiline = turfMultiLineString(records.reduce(reducer, [[]]));
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-call
-  const simplified = turfSimplify(multiline, simplifyOptions);
+  const multiline = turfSimplify(turfMultiLineString(records.reduce(reducer, [[]])), simplifyOptions);
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  const coordsMeta: GeoJsonProperties = parameterFilter(records, simplified).map((record) => ({
-    ...record,
-    time: dateToTimestamp(record.timestamp),
-  }));
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  simplified.properties = { coordsMeta };
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  return simplified;
+  const coordsMeta: GeoJsonProperties = parameterFilter(records, multiline)
+    .map((record) => ({
+      ...record,
+      time: dateToTimestamp(record.timestamp),
+    }));
+  multiline.properties = { coordsMeta };
+  return multiline;
 }
 
 export default transform;

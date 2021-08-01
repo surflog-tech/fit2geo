@@ -1,18 +1,27 @@
 import assert from 'assert';
-import { readFileSync } from 'fs';
-import { coordAll, coordEach } from '@turf/meta';
+import { readFileSync, writeFileSync } from 'fs';
+import { coordAll } from '@turf/meta';
 import parseFit from '../src/parse';
 import fit2geo from '../src/index';
 
 // const fitFile = './assets/6829812928_ACTIVITY.fit';
-const fitFile = './assets/7147163106_ACTIVITY.fit';
+// const fitFile = './assets/7147163106_ACTIVITY.fit';
+// invalid polygon says /@turf/clean-coords
+const fitFile = './assets/6975723491_ACTIVITY.fit';
 
 describe('fit2geo', () => {
 
-  xit('should be able to parse a FIT file', async function() {
+  it('should be able to parse a FIT file', async function() {
     this.timeout(10000);
     const fitData:ArrayBuffer = readFileSync(fitFile);
-    return parseFit(fitData);
+    // return parseFit(fitData);
+    writeFileSync('./assets/fit.json', JSON.stringify(await parseFit(fitData)));
+  });
+
+  it('should be able to analyze a FIT file', function() {
+    this.timeout(10000);
+    const fitData:ArrayBuffer = readFileSync(fitFile);
+    return fit2geo(fitData);
   });
 
   xit('should find multiple LineStrings', async function() {
@@ -36,41 +45,11 @@ describe('fit2geo', () => {
     assert.strictEqual(coordsMeta.length, coordinates.length);
   });
 
-  it('should find equal amount of coordsMeta and coordinates', async function() {
+  it('should create file', async function() {
     this.timeout(10000);
     const fitData:ArrayBuffer = readFileSync(fitFile);
     const result = await fit2geo(fitData);
-    // @ts-ignore
-    const { properties: { coordsMeta } } = result;
-    let indexLine = 0;
-    // let diffs = 0;
-    // @ts-ignore
-    coordEach(result, (currentCoord, coordIndex, featureIndex, multiFeatureIndex) => {
-      // console.log(featureIndex, multiFeatureIndex);
-      if (indexLine !== multiFeatureIndex) {
-        indexLine = multiFeatureIndex;
-        return;
-      }
-      if (coordIndex === 0) return;
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
-      const { time } = coordsMeta[coordIndex];
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
-      const { time: timePrev } = coordsMeta[coordIndex - 1];
-      const timeDiff = time - timePrev;
-      if (timeDiff > 1000) {
-        // diffs += 1;
-        console.log(multiFeatureIndex, coordIndex);
-      }
-      // console.log(timeDiff);
-    });
-    // console.log(diffs);
-  });
-
-  xit('should log result', async function() {
-    this.timeout(10000);
-    const fitData:ArrayBuffer = readFileSync(fitFile);
-    const result = await fit2geo(fitData);
-    console.log(JSON.stringify(result));
+    writeFileSync('./assets/test.json', JSON.stringify(result));
   });
 
 });
