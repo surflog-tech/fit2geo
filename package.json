@@ -34,7 +34,7 @@
     "@tsconfig/node14": "1.0.1",
     "@types/geojson": "7946.0.8",
     "@types/mocha": "9.0.0",
-    "@types/node": "16.4.8",
+    "@types/node": "16.4.10",
     "@typescript-eslint/eslint-plugin": "4.28.5",
     "@typescript-eslint/parser": "4.28.5",
     "esbuild": "0.12.17",
