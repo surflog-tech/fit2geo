@@ -1,6 +1,6 @@
 {
   "name": "@surflog/fit2geo",
-  "version": "1.2.10",
+  "version": "1.2.11",
   "description": "FIT to GeoJSON",
   "keywords": [
     "FIT",
