@@ -5,9 +5,9 @@ import parseFit from '../src/parse';
 import fit2geo from '../src/index';
 
 // const fitFile = './assets/6829812928_ACTIVITY.fit';
-// const fitFile = './assets/7147163106_ACTIVITY.fit';
+const fitFile = './assets/7147163106_ACTIVITY.fit';
 // invalid polygon says /@turf/clean-coords
-const fitFile = './assets/6975723491_ACTIVITY.fit';
+// const fitFile = './assets/6975723491_ACTIVITY.fit';
 
 describe('fit2geo', () => {
 
