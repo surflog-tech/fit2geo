@@ -1,5 +1,5 @@
 {
-  "name": "fit2geo",
+  "name": "@surflog/fit2geo",
   "version": "1.2.10",
   "description": "FIT to GeoJSON",
   "keywords": [
@@ -44,6 +44,6 @@
     "ts-node": "10.1.0",
     "typescript": "4.3.5"
   },
-  "repository": "https://github.com/webjay/fit2geo.git",
+  "repository": "https://github.com/surflog-tech/fit2geo",
   "author": "Jacob Friis Saxberg <jacob@webcom.dk>"
 }
