@@ -1,14 +1,7 @@
-import { GeoJSON, MultiLineString, GeoJsonProperties } from 'geojson';
+import { GeoJSON, Feature, MultiLineString, GeoJsonProperties } from 'geojson';
 import { multiLineString as turfMultiLineString } from '@turf/helpers';
-import turfSimplify from '@turf/simplify';
 import { coordAll } from '@turf/meta';
 import { Record } from './index.d';
-
-const simplifyOptions = {
-  tolerance: 0,
-  highQuality: true,
-  mutate: true,
-};
 
 function dateToTimestamp(d: Date) {
   return d.getTime();
@@ -36,7 +29,7 @@ function reducer(accumulator: number[][][], currentValue: Record, index: number,
   return accumulator;
 }
 
-function parameterFilter(records: Record[], multiline: MultiLineString): Record[] {
+function parameterFilter(records: Record[], multiline: Feature<MultiLineString>): Record[] {
   const coords = coordAll(multiline);
   if (coords.length === 0) return [];
   let coordIndex = 0;
@@ -51,9 +44,7 @@ function parameterFilter(records: Record[], multiline: MultiLineString): Record[
 }
 
 function transform(records: Record[]): GeoJSON {
-  const multiline = turfSimplify(turfMultiLineString(records.reduce(reducer, [[]])), simplifyOptions);
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
+  const multiline = turfMultiLineString(records.reduce(reducer, [[]]));
   const coordsMeta: GeoJsonProperties = parameterFilter(records, multiline)
     .map((record) => ({
       ...record,
