@@ -15,6 +15,9 @@ function getRecords(records: Record[], index: number) {
   if (index > 0) {
     return [records[index - 1], records[index]];
   }
+  if (records.length === 1) {
+    return [records[index], records[index]];
+  }
   return [records[index], records[index + 1]];
 }
 
