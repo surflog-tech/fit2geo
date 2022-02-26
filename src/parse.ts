@@ -1,5 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/triple-slash-reference
-/// <reference path="./fit-file-parser.d.ts"/>
 import FitParser from 'fit-file-parser';
 import { Fit } from './index.d';
 
