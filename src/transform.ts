@@ -3,8 +3,8 @@ import { featureCollection, lineString, isNumber } from '@turf/helpers';
 import bbox from '@turf/bbox';
 import { Record } from './index.d';
 
-function recordIsInvalid({ position_long, position_lat }: Record) {
-  return [position_long, position_lat].some((val) => isNumber(val) === false);
+function areRecordsValid(records: Record[]) {
+  return records.every(({ position_long, position_lat }) => [position_long, position_lat].every(isNumber));
 }
 
 function getPosition({ position_long, position_lat }: Record): Position {
@@ -20,8 +20,10 @@ function getRecords(records: Record[], index: number) {
 
 function makeLineStringFeature(accumulator: Feature<LineString, Record>[], currentValue: Record, index: number, records: Record[]) {
   const [record1, record2] = getRecords(records, index);
-  if (recordIsInvalid(record1) || recordIsInvalid(record2)) return accumulator;
-  return accumulator.concat(lineString([getPosition(record1), getPosition(record2)], currentValue));
+  if (areRecordsValid([record1, record2])) {
+    accumulator.push(lineString([getPosition(record1), getPosition(record2)], currentValue));
+  }
+  return accumulator;
 }
 
 function transform(records: Record[]): FeatureCollection {
