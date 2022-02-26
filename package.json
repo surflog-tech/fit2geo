@@ -12,7 +12,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "prebuild": "rm -f lib/*.js",
+    "prebuild": "rm -f lib/*",
     "build": "ts-node build.ts",
     "lint": "eslint src",
     "test": "mocha",
