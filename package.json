@@ -12,7 +12,8 @@
   },
   "license": "MIT",
   "scripts": {
-    "build": "rm -f lib/*.js && node build.js",
+    "prebuild": "rm -f lib/*.js",
+    "build": "ts-node build.ts",
     "lint": "eslint src",
     "test": "mocha",
     "predeploy": "npm run build && npm version patch",

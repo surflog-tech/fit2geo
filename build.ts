@@ -1,15 +1,14 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const { build } = require('esbuild');
-const { nodeExternalsPlugin } = require('esbuild-node-externals');
+import { build, BuildOptions }  from 'esbuild';
+import { nodeExternalsPlugin } from 'esbuild-node-externals';
 
 const options = {
   outdir: 'lib',
   bundle: true,
   sourcemap: true,
   platform: 'node',
-  format: 'cjs',
+  minify: true,
   plugins: [nodeExternalsPlugin()],
-};
+} as BuildOptions;
 
 void build({
   ...options,
