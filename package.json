@@ -26,6 +26,7 @@
     "node": ">=14"
   },
   "dependencies": {
+    "@turf/bbox": "6.5.0",
     "@turf/helpers": "6.5.0",
     "fit-file-parser": "1.9.3"
   },

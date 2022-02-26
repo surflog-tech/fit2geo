@@ -1,5 +1,6 @@
-import { GeoJSON, Feature, LineString, Position } from 'geojson';
+import { FeatureCollection, Feature, LineString, Position } from 'geojson';
 import { featureCollection, lineString, isNumber } from '@turf/helpers';
+import bbox from '@turf/bbox';
 import { Record } from './index.d';
 
 function recordIsInvalid({ position_long, position_lat }: Record) {
@@ -17,14 +18,16 @@ function getRecords(records: Record[], index: number) {
   return [records[index], records[index + 1]];
 }
 
-function reducer(accumulator: Feature<LineString, Record>[], currentValue: Record, index: number, records: Record[]) {
+function makeLineStringFeature(accumulator: Feature<LineString, Record>[], currentValue: Record, index: number, records: Record[]) {
   const [record1, record2] = getRecords(records, index);
   if (recordIsInvalid(record1) || recordIsInvalid(record2)) return accumulator;
   return accumulator.concat(lineString([getPosition(record1), getPosition(record2)], currentValue));
 }
 
-function transform(records: Record[]): GeoJSON {
-  return featureCollection(records.reduce(reducer, []));
+function transform(records: Record[]): FeatureCollection {
+  const lineStringFeatures = featureCollection(records.reduce(makeLineStringFeature, []));
+  lineStringFeatures.bbox = bbox(lineStringFeatures);
+  return lineStringFeatures;
 }
 
 export default transform;
