@@ -1,16 +1,16 @@
 export interface Record {
-  timestamp: Date;
-  position_lat: number;
-  position_long: number;
-  distance: number;
   accumulated_power: number;
   altitude: number;
-  speed: number;
-  heart_rate: number;
   cadence: number;
-  fractional_cadence: number;
+  distance: number;
   elapsed_time: number;
+  fractional_cadence: number;
+  heart_rate: number;
+  position_lat: number;
+  position_long: number;
+  speed: number;
   timer_time: number;
+  timestamp: Date;
 }
 
 export interface Fit {
