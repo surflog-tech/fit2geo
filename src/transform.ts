@@ -1,57 +1,30 @@
-import { GeoJSON, Feature, MultiLineString, GeoJsonProperties } from 'geojson';
-import { multiLineString as turfMultiLineString } from '@turf/helpers';
-import { coordAll } from '@turf/meta';
+import { GeoJSON, Feature, LineString, Position } from 'geojson';
+import { featureCollection, lineString, isNumber } from '@turf/helpers';
 import { Record } from './index.d';
 
-function dateToTimestamp(d: Date) {
-  return d.getTime();
+function recordIsInvalid({ position_long, position_lat }: Record) {
+  return [position_long, position_lat].some((val) => isNumber(val) === false);
 }
 
-function recordInvalid(lng: number, lat: number) {
-  return [lng, lat].some((val) => typeof val !== 'number');
+function getPosition({ position_long, position_lat }: Record): Position {
+  return [position_long, position_lat];
 }
 
-function reducer(accumulator: number[][][], currentValue: Record, index: number, array: Record[]) {
-  const { position_long, position_lat, altitude, elapsed_time, timer_time } = currentValue;
-  if (recordInvalid(position_long, position_lat)) return accumulator;
+function getRecords(records: Record[], index: number) {
   if (index > 0) {
-    const prevValue = array[index - 1];
-    const diffPrev = prevValue.elapsed_time - prevValue.timer_time;
-    const diff = elapsed_time - timer_time;
-    if (diffPrev !== diff) accumulator.push([]);
+    return [records[index - 1], records[index]];
   }
-  const lastLine = accumulator[accumulator.length - 1];
-  if (typeof altitude === 'number') {
-    lastLine.push([position_long, position_lat, altitude]);
-  } else {
-    lastLine.push([position_long, position_lat]);
-  }
-  return accumulator;
+  return [records[index], records[index + 1]];
 }
 
-function parameterFilter(records: Record[], multiline: Feature<MultiLineString>): Record[] {
-  const coords = coordAll(multiline);
-  if (coords.length === 0) return [];
-  let coordIndex = 0;
-  return records.filter(({ position_long, position_lat }) => {
-    if (coords[coordIndex] === undefined) return false;
-    if (recordInvalid(position_long, position_lat)) return false;
-    const match = [position_long, position_lat].every((coord, index) => coord === coords[coordIndex][index]);
-    if (match === false) return false;
-    coordIndex += 1;
-    return true;
-  });
+function reducer(accumulator: Feature<LineString, Record>[], currentValue: Record, index: number, records: Record[]) {
+  const [record1, record2] = getRecords(records, index);
+  if (recordIsInvalid(record1) || recordIsInvalid(record2)) return accumulator;
+  return accumulator.concat(lineString([getPosition(record1), getPosition(record2)], currentValue));
 }
 
 function transform(records: Record[]): GeoJSON {
-  const multiline = turfMultiLineString(records.reduce(reducer, [[]]));
-  const coordsMeta: GeoJsonProperties = parameterFilter(records, multiline)
-    .map((record) => ({
-      ...record,
-      time: dateToTimestamp(record.timestamp),
-    }));
-  multiline.properties = { coordsMeta };
-  return multiline;
+  return featureCollection(records.reduce(reducer, []));
 }
 
 export default transform;

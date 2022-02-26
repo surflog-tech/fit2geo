@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
+/// <reference path="./fit-file-parser.d.ts"/>
 import FitParser from 'fit-file-parser';
 import { Fit } from './index.d';
 
@@ -6,7 +8,6 @@ const options = {
   speedUnit: 'km/h',
   lengthUnit: 'km',
   elapsedRecordField: true,
-  // force: false,
 };
 
 function parseFit(buffer: ArrayBuffer): Promise<Fit> {

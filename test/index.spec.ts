@@ -1,6 +1,5 @@
 import assert from 'assert';
 import { readFileSync, writeFileSync } from 'fs';
-import { coordAll } from '@turf/meta';
 import parseFit from '../src/parse';
 import fit2geo from '../src/index';
 
@@ -31,18 +30,6 @@ describe('fit2geo', () => {
     if (result.type !== 'Feature' || result.geometry.type !== 'MultiLineString') return assert.fail();
     const { geometry: { coordinates } } = result;
     assert.strictEqual(coordinates.length, 4);
-  });
-
-  it('should find equal amount of coordsMeta and coordinates', async function() {
-    this.timeout(10000);
-    const fitData:ArrayBuffer = readFileSync(fitFile);
-    const result = await fit2geo(fitData);
-    // @ts-ignore
-    const coordinates = coordAll(result);
-    // @ts-ignore
-    const { properties: { coordsMeta } } = result;
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    assert.strictEqual(coordsMeta.length, coordinates.length);
   });
 
   it('should create file', async function() {
