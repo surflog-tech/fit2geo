@@ -16,7 +16,7 @@ function parseFit(buffer: ArrayBuffer): Promise<Fit> {
     const fitParser = new FitParser(options);
     fitParser.parse(buffer, (err, res) => {
       if (err) return reject(err);
-      resolve(res);
+      resolve(res as Fit);
     });
   });
 }
