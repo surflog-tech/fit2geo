@@ -10,7 +10,7 @@ export interface Record {
   position_long: number;
   speed: number;
   timer_time: number;
-  timestamp: Date;
+  timestamp: string;
 }
 
 export interface Fit {
