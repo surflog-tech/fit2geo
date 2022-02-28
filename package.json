@@ -6,6 +6,9 @@
     "FIT",
     "GeoJSON"
   ],
+  "files": [
+    "lib"
+  ],
   "main": "lib/index.js",
   "bin": {
     "fit2geo": "lib/cli.js"
@@ -18,12 +21,6 @@
     "test": "mocha",
     "predeploy": "npm run build && npm version patch",
     "deploy": "npm publish"
-  },
-  "files": [
-    "lib"
-  ],
-  "engines": {
-    "node": ">=14"
   },
   "dependencies": {
     "@turf/bbox": "6.5.0",
