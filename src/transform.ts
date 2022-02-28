@@ -1,4 +1,4 @@
-import { FeatureCollection, Feature, LineString, Position } from 'geojson';
+import { Feature, LineString, Position } from 'geojson';
 import { featureCollection, lineString, isNumber } from '@turf/helpers';
 import bbox from '@turf/bbox';
 import { Record } from './index.d';
@@ -29,7 +29,7 @@ function makeLineStringFeature(accumulator: Feature<LineString, Record>[], curre
   return accumulator;
 }
 
-function transform(records: Record[]): FeatureCollection {
+function transform(records: Record[]) {
   const lineStringFeatures = featureCollection(records.reduce(makeLineStringFeature, []));
   lineStringFeatures.bbox = bbox(lineStringFeatures);
   return lineStringFeatures;
