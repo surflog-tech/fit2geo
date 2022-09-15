@@ -15,21 +15,24 @@ export interface Record {
   timestamp: string;
 }
 
+interface Session {
+  sport?: string;
+}
+
 export interface Fit {
   records: Array<Record>;
   sports: Array<Sport>;
+  sessions: Array<Session>
 }
 
 export interface Sport {
-  name: string;
-  sport: string;
-  sub_sport: string;
+  name?: string;
+  sport?: string;
+  sub_sport?: string;
 }
 
-type JSONPrimitive = string | number | boolean | null | Sport;
-type JSONValue = JSONPrimitive | JSONObject | Array<JSONValue>
-type JSONObject = { [member: string]: JSONValue }
-
 export interface SurflogFeatureCollection extends FeatureCollection {
-  properties?: JSONObject;
+  properties?: {
+    sport?: Sport
+  };
 }

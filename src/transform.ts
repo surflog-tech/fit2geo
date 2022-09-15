@@ -1,7 +1,7 @@
 import { Feature, LineString, Position } from 'geojson';
 import { featureCollection, lineString, isNumber } from '@turf/helpers';
 import bbox from '@turf/bbox';
-import { Record, Sport, SurflogFeatureCollection } from './index.d';
+import { Fit, Record, SurflogFeatureCollection } from './index.d';
 
 function areRecordsValid(records: Record[]) {
   return records.every(({ position_long, position_lat }) => [position_long, position_lat].every(isNumber));
@@ -29,11 +29,20 @@ function makeLineStringFeature(accumulator: Feature<LineString, Record>[], curre
   return accumulator;
 }
 
-function transform(records: Record[], sports: Sport[]) {
+function detectSport(sports: Fit['sports'], sessions: Fit['sessions']) {
+  if (Array.isArray(sports) && sports.length > 0) return sports[0];
+  if (Array.isArray(sessions) && sessions.length > 0) {
+    return {
+      name: sessions[0].sport
+    };
+  }
+}
+
+function transform({records, sports, sessions}: Fit) {
   const lineStringFeatures: SurflogFeatureCollection = featureCollection(records.reduce(makeLineStringFeature, []));
   lineStringFeatures.bbox = bbox(lineStringFeatures);
   if (lineStringFeatures.properties === undefined) lineStringFeatures.properties = {};
-  lineStringFeatures.properties.sports = sports;
+  lineStringFeatures.properties.sport = detectSport(sports, sessions);
   return lineStringFeatures;
 }
 
